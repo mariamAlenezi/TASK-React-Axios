@@ -2,17 +2,25 @@ import React, { useEffect, useState } from "react";
 import petsData from "../petsData";
 import { useParams } from "react-router-dom";
 import { getOnePet } from "../api/pets";
+import { useQuery } from "@tanstack/react-query";
 const PetDetail = () => {
   const { petId } = useParams();
 
-  const [pet, setPet] = useState({});
-  const callAPI = async () => {
-    const res = await getOnePet(petId);
-    setPet(res);
-  };
-  useEffect(() => {
-    callAPI();
-  }, []);
+  // const [pet, setPet] = useState({});
+  // const callAPI = async () => {
+  //   const res = await getOnePet(petId);
+  //   setPet(res);
+  // };
+  // useEffect(() => {
+  //   callAPI();
+  // }, []);
+
+  const { data: pet, isLoading } = useQuery({
+    queryKey: ["pet", petId],
+    queryFn: () => getOnePet(petId),
+  });
+
+  if (isLoading) return <h1>is loading . . . . . </h1>;
 
   if (!pet) {
     return <h1>Not found</h1>;
