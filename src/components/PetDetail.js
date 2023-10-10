@@ -1,7 +1,23 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import petsData from "../petsData";
+import { useParams } from "react-router-dom";
+import { getOnePet } from "../api/pets";
 const PetDetail = () => {
-  const pet = petsData[0];
+  const { petId } = useParams();
+
+  const [pet, setPet] = useState({});
+  const callAPI = async () => {
+    const res = await getOnePet(petId);
+    setPet(res);
+  };
+  useEffect(() => {
+    callAPI();
+  }, []);
+
+  if (!pet) {
+    return <h1>Not found</h1>;
+  }
+
   return (
     <div className="bg-[#F9E3BE] w-screen h-[100vh] flex justify-center items-center">
       <div className="border border-black rounded-md w-[70%] h-[70%] overflow-hidden flex flex-col md:flex-row p-5">
